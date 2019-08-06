@@ -1,6 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.json());
 
 const database = {
   users: [
@@ -36,7 +39,12 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
-  res.json('sign in working');
+  if (req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
+    res.json("you are logged in")
+  } else {
+    res.status(400).json('error logged in');
+  }
+
 })
 
 
