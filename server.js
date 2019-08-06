@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
-  res.send('sign in working');
+  res.json('sign in working');
 })
 
 
