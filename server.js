@@ -35,7 +35,7 @@ const database = {
 */
 
 app.get('/', (req, res) => {
-  res.send('get is working');
+  res.json(database.users);
 })
 
 app.post('/signin', (req, res) => {
@@ -67,6 +67,22 @@ app.get('/profile/:id', (req, res) => {
     if (user.id === id) {
       found = true;
       return res.json(user);
+    }
+  })
+  if (!found) {
+    res.status(404).json('not found')
+  }
+})
+
+app.post('/image', (req, res) => {
+  const { id } = req.body;
+  let foud = false;
+
+  database.users.forEach(user => {
+    if (user.id === id) {
+      found = true;
+      user.entries++;
+      return res.json(user.entries);
     }
   })
   if (!found) {
