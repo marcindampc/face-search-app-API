@@ -61,7 +61,7 @@ app.post('/register', (req, res) => {
 
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params;
-  let foud = false;
+  let found = false;
 
   database.users.forEach(user => {
     if (user.id === id) {
@@ -76,7 +76,7 @@ app.get('/profile/:id', (req, res) => {
 
 app.post('/image', (req, res) => {
   const { id } = req.body;
-  let foud = false;
+  let found = false;
 
   database.users.forEach(user => {
     if (user.id === id) {
