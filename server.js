@@ -2,6 +2,26 @@ const express = require('express');
 
 const app = express();
 
+const database = {
+  users: [
+    {
+      id: '123',
+      name: 'John',
+      email: 'john@gmail.com',
+      password: 'apple',
+      entries: 0,
+      joined: new Date()
+    },
+    {
+      id: '124',
+      name: 'Lidka',
+      email: 'lidka@gmail.com',
+      password: 'bananas',
+      entries: 0,
+      joined: new Date()
+    }
+  ]
+}
 
 /*
 / --> res = this is working
