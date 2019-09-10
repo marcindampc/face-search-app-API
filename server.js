@@ -35,6 +35,13 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
+  bcrypt.compare("tata", "$2a$10$4Sd2JuosthcEhK6G1.VRIew/LtDZTfIT9EhskhDu.KPerR54SyBkm", function(err, res) {
+    console.log('first guess', res)
+  });
+  bcrypt.compare("veggies", "$2a$10$4Sd2JuosthcEhK6G1.VRIew/LtDZTfIT9EhskhDu.KPerR54SyBkm", function(err, res) {
+    console.log('sec guess', res)
+  });
+
   if (req.body.email === database.users[0].email
     && req.body.password === database.users[0].password) {
     res.json("you are logged in")
@@ -95,12 +102,7 @@ app.post('/image', (req, res) => {
 // });
 
 // // Load hash from your password DB.
-// bcrypt.compare("bacon", hash, function(err, res) {
-//   // res == true
-// });
-// bcrypt.compare("veggies", hash, function(err, res) {
-//   // res = false
-// });
+
 
 app.listen(3000, () => {
   console.log('app is running on port 3000');
