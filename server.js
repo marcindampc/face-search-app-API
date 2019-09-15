@@ -67,9 +67,10 @@ app.post('/register', (req, res) => {
     name: name,
     joined: new Date()
   } )
-    .then(response => {
-      res.json(response);
+    .then(user => {
+      res.json(user[0]);
     })
+    .catch(err => res.status(400).json('unable to register'))
 })
 
 app.get('/profile/:id', (req, res) => {
