@@ -9,12 +9,14 @@ const db = knex({
   connection: {
     host : '127.0.0.1', //to be modified according to platform
     user : 'postgres',
-    password : '',
+    password : 'klara',
     database : 'faceapp'
   }
 });
 
-console.log(db.select('*').from('users'));
+db.select('*').from('users').then(data => {
+  console.log(data);
+});
 
 
 const app = express();
@@ -58,14 +60,16 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name } = req.body;
-  database.users.push({
-    id: '125',
-    name: name,
+  db('users')
+    .returning('*')
+    .insert({
     email: email,
-    entries: 0,
+    name: name,
     joined: new Date()
-  })
-  res.json(database.users[database.users.length - 1]);
+  } )
+    .then(response => {
+      res.json(response);
+    })
 })
 
 app.get('/profile/:id', (req, res) => {
