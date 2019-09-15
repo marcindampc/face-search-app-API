@@ -4,15 +4,17 @@ const bcrypt = require('bcrypt-nodejs'); // no longer actively maintained => swi
 const cors = require('cors');
 const knex = require('knex');
 
-knex({
+const db = knex({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
+    host : '127.0.0.1', //to be modified according to platform
     user : 'postgres',
-    password : 'your_database_password',
-    database : 'myapp_test'
+    password : '',
+    database : 'faceapp'
   }
 });
+
+console.log(db.select('*').from('users'));
 
 
 const app = express();
