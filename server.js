@@ -4,42 +4,24 @@ const bcrypt = require('bcrypt-nodejs'); // no longer actively maintained => swi
 const cors = require('cors');
 const knex = require('knex');
 
-knex({
+const db = knex({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
+    host : '127.0.0.1', //to be modified according to platform
     user : 'postgres',
-    password : 'your_database_password',
-    database : 'myapp_test'
+    password : 'test',
+    database : 'faceapp'
   }
 });
 
+db.select('*').from('users').then(data => {
+  console.log(data);
+});
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
-
-const database = {
-  users: [
-    {
-      id: '123',
-      name: 'John',
-      email: 'john@gmail.com',
-      password: 'apple',
-      entries: 0,
-      joined: new Date()
-    },
-    {
-      id: '124',
-      name: 'Lidka',
-      email: 'lidka@gmail.com',
-      password: 'bananas',
-      entries: 0,
-      joined: new Date()
-    }
-  ]
-}
 
 app.get('/', (req, res) => {
   res.json(database.users);
@@ -56,53 +38,44 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name } = req.body;
-  database.users.push({
-    id: '125',
-    name: name,
+  db('users')
+    .returning('*')
+    .insert({
     email: email,
-    entries: 0,
+    name: name,
     joined: new Date()
-  })
-  res.json(database.users[database.users.length - 1]);
+  } )
+    .then(user => {
+      res.json(user[0]);
+    })
+    .catch(err => res.status(400).json('unable to register'))
 })
 
+// get profile won't be used for now (future development)
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params;
-  let found = false;
-
-  database.users.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      return res.json(user);
-    }
-  })
-  if (!found) {
-    res.status(404).json('not found')
-  }
+  db.select('*').from('users').where({id})
+    .then(user => {
+      if (user.length) {
+        res.json(user[0])
+      } else {
+        res.status(400).json('not found')
+      }
+    })
+    .catch(err => res.status(400).json('error getting user'));
 })
 
 app.put('/image', (req, res) => {
   const { id } = req.body;
-  let found = false;
-
-  database.users.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      user.entries++;
-      return res.json(user.entries);
-    }
+  db('users')
+  .where('id', '=', id)
+  .increment('entries', 1)
+  .returning('entries')
+  .then(entries => {
+    res.json(entries[0])
   })
-  if (!found) {
-    res.status(404).json('not found')
-  }
+  .catch(err => res.status(400).json('error updating entries'))
 })
-
-// bcrypt.hash("bacon", null, null, function(err, hash) {
-//   // Store hash in your password DB.
-// });
-
-// // Load hash from your password DB.
-
 
 app.listen(3000, () => {
   console.log('app is running on port 3000');
