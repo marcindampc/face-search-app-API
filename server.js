@@ -28,11 +28,11 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => { res.json(database.users) })
-app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })// DEPENDENCY INJECTION! of db & bcrypt
+app.post('/signin', signin.handleSignin(db, bcrypt))
+app.post('/register', register.handleRegister(db, bcrypt))// DEPENDENCY INJECTION! of db & bcrypt; UPDATE: convert to function composition - (req, res) moved to controller
 // get profile won't be used for now (future development)
-app.get('/profile/:id', (req, res) => { profile.handleProfile(req, res, db) })
-app.put('/image', (req, res) => { image.handleImage(req, res, db) })
+app.get('/profile/:id', profile.handleProfileGet(db))
+app.put('/image', image.handleImage(db))
 
 app.listen(3000, () => {
   console.log('app is running on port 3000');
